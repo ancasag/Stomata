@@ -1,5 +1,5 @@
 import cv2 as cv
-import argparse
+#import argparse
 import sys
 import numpy as np
 import os.path
@@ -98,35 +98,35 @@ def postprocess(frame, outs):
 def predict(imagePath):
 	#args = parser.parse_args()
 	#comprobamos que el argumento sea una imagen jpg
-	if imagePath.split('.')[1] != "jpg":
-		print('Esta imagen no tiene formato .jpg')
-		sys.exit(1)#si no lo es salimos
-	else:
+	#if imagePath.split('.')[1] != "jpg":
+		#print('Esta imagen no tiene formato .jpg')
+		#sys.exit(1)#si no lo es salimos
+	#else:
 		#print('Todo correcto')
 		#si es una imagen la cargamos
-		frame = cv.imread(imagePath)
+	frame = cv.imread(imagePath)
 			
-		#Crea un blob 4D desde una imagen
-		blob  = cv.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
+	#Crea un blob 4D desde una imagen
+	blob  = cv.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
 
-		# Establece la entrada a la red.
-		net.setInput(blob)
+	# Establece la entrada a la red.
+	net.setInput(blob)
 
-		# Ejecuta el paso hacia adelante para obtener la salida de las capas de salida.
-		outs  = net.forward(getOutputsNames(net))
+	# Ejecuta el paso hacia adelante para obtener la salida de las capas de salida.
+	outs  = net.forward(getOutputsNames(net))
 
-		# Retire los cuadros delimitadores con poca confianza.
-		postprocess(frame, outs)
+	# Retire los cuadros delimitadores con poca confianza.
+	postprocess(frame, outs)
 
-		# Poner información de eficiencia. La función getPerfProfile devuelve el tiempo total para la inferencia (t) y los tiempos para cada una de las capas (en layersTimes)
-		t, _  = net.getPerfProfile()
-		label = 'Inference time: %.2f ms' % (t * 1000.0 / cv.getTickFrequency())
-		cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
+	# Poner información de eficiencia. La función getPerfProfile devuelve el tiempo total para la inferencia (t) y los tiempos para cada una de las capas (en layersTimes)
+	t, _  = net.getPerfProfile()
+	label = 'Inference time: %.2f ms' % (t * 1000.0 / cv.getTickFrequency())
+	cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
-		#Variable con el nombre de la imagen
-		outputFile = imagePath.split('.')[0]+'_predict.jpg'
-		# Escribe el marco con las cajas de detección.
-		cv.imwrite(outputFile, frame.astype(np.uint8));
+	#Variable con el nombre de la imagen
+	outputFile = imagePath.split('.')[0]+'_predict.jpg'
+	# Escribe el marco con las cajas de detección.
+	cv.imwrite(outputFile, frame.astype(np.uint8));
 
 def showImage(image):
 	if len(image.shape)==3:
